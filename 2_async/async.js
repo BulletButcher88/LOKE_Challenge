@@ -5,7 +5,7 @@ const { resolve } = require("url");
 
 const SWAPI_URL = "https://swapi.co/api/";
 
-function apiGet(path, cb) {
+async function apiGet(path, cb) {
   https
     .get(
       resolve(SWAPI_URL, path),
