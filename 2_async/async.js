@@ -55,6 +55,7 @@ function readSearchTerms(cb) {
 }
 
 function saveNames(people, cb) {
+  (people.map(p => p ? console.log(p.name): p))
   console.log(`Saving ${people.length} results`);
   const data = people.map(p => (p ? p.name : "No results")).join("\n");
   writeFile(join(__dirname, "names.txt"), data, { encoding: "utf8" }, cb);

@@ -1,13 +1,11 @@
 import React from 'react';
 
-
 class FizzBuzz extends React.Component {
 
-  // 
-fizzLogic() {
+  // number array set as a function and called within the render
 
+fizzLogic() {
   const NumArray = Array.from({ length: 100 });
-  
   return (
     NumArray.map((_, n) => 
       n === 0 ? 0 :
