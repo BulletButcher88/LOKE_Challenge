@@ -43,8 +43,32 @@ function getPerson(query, cb) {
   });
 }
 
-function readSearchTerms(cb) {
-  readFile(join(__dirname, "search.txt"), { encoding: "utf8" }, (err, data) => {
+
+// readFile("data.txt", (err, data) => {
+//   const stuff = data
+// })
+
+// // becomes...
+
+// try {
+//   const stuff = await readFile("data.txt")
+// } catch (e) {
+//   console.log(e)
+// }
+
+
+const readSearchTerms = async (cb) => {
+  try {
+    const data = await readFile(join(__dirname, "search.txt"), { encoding: "utf8" });
+    const nonEmptyLines = await data.split("\n").filter(line => Boolean(line));
+    cb(null, nonEmptyLines);
+  } catch (error) {
+    cb(error);
+  }
+}
+
+function readSearchTerms (data, cb) {
+  readFile(join(__dirname, "search.txt"), (err, data) => {
     if (err) {
       cb(err);
       return;
