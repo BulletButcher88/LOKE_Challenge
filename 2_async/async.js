@@ -5,90 +5,41 @@ const { resolve } = require("url");
 
 const SWAPI_URL = "https://swapi.co/api/";
 
-//  async function apiGet(path) {
+ async function apiGet(path) {
+   try {
+        await https.get(resolve(SWAPI_URL, path), {headers: {Accept: "application/json"}},       
+        res => {
+        let data = "";
 
-//    try {
-//         const response = await https.get(resolve(SWAPI_URL, path), {headers: {Accept: "application/json"}},       
-//         res => {
-//         let data = "";
+        res.on("data", chunk => {
+        data += chunk;
+      });
 
-//         res.on("data", chunk => {
-//           data += chunk;
-//         });
+        res.on("end", () => {
+        cb(null, data ? JSON.parse(data) : null);
+        });
+      }
+    )
 
-//         res.on("end", () => {
-//           cb(null, data ? JSON.parse(data) : null);
-//         });
-//       }
-//       )
-    //  console.log(response)
-
-
-
-  //  } catch(error) {
-  //    console.log(error)
-  //  }
-   
+   } catch(error) {
+     console.log(error)
+   }
+  }
 
 
-    // https
-    //   .get(
-    //     resolve(SWAPI_URL, path),
-    //   {
-    //      headers: {Accept: "application/json"} 
-    //   },
-    //   res => {
-    //     let data = "";
+async function getPerson(query, cb) {
+  try {
+    const data = await apiGet("people/?search=" + query)
+    const [person] =  data.results;
+    cb(null, person);
 
-    //     res.on("data", chunk => {
-    //       data += chunk;
-    //     });
-
-    //     res.on("end", () => {
-    //       cb(null, data ? JSON.parse(data) : null);
-    //     });
-    //   }
-    // )
-    // .on("error", rej => {
-    //   console.log(rej);
-    // });
+  } catch(error) {
+    console.log(error)
+  }
+}
 
 
-
-  // }
-
-
-
-  // apiGet("people/?search=" + "Luke")
-
-
-
-
-// async function getPerson(query, cb) {
-//   try {
-//     const data = await apiGet("people/?search=" + query)
-//     const [person] =  data.results;
-//     cb(null, person);
-
-//   } catch(error) {
-//     console.log(error)
-//   }
-// }
-
-
-// // readFile("data.txt", (err, data) => {
-// //   const stuff = data
-// // })
-
-// // // becomes...
-
-// // try {
-// //   const stuff = await readFile("data.txt")
-// // } catch (e) {
-// //   console.log(e)
-// // }
-
-async function readSearchTerms(cb) {
+async function readSearchTerms() {
 
   try {
     const data = await readFile(join(__dirname, "search.txt"), { encoding: "utf8" });
@@ -99,71 +50,58 @@ async function readSearchTerms(cb) {
     console.log(error) 
   }
 }
-readSearchTerms()
 
-// // function readSearchTerms(cb) {
-// //   readFile(join(__dirname, "search.txt"), { encoding: "utf8" }, (err, data) => {
-// //     if (err) {
-// //       cb(err);
-// //       return;
-// //     }
-// //     const nonEmptyLines = data.split("\n").filter(line => Boolean(line));
-// //     cb(null, nonEmptyLines);
-// //   });
-// // }
+function saveNames(people, cb) {
+  (people.map(p => p ? console.log(p.name): p))
+  console.log(`Saving ${people.length} results`);
+  const data = people.map(p => (p ? p.name : "No results")).join("\n");
+  writeFile(join(__dirname, "names.txt"), data, { encoding: "utf8" }, cb);
+}
 
+async function main() {
+  readSearchTerms((err, terms) => {
+    if (err) {
+      console.error("Error reading search terms", err);
+      return;
+    }
 
-// function saveNames(people, cb) {
-//   (people.map(p => p ? console.log(p.name): p))
-//   console.log(`Saving ${people.length} results`);
-//   const data = people.map(p => (p ? p.name : "No results")).join("\n");
-//   writeFile(join(__dirname, "names.txt"), data, { encoding: "utf8" }, cb);
-// }
+    let numOk = 0;
+    let firstErr;
+    const people = Array(terms.length);
 
-// async function main() {
-//   readSearchTerms((err, terms) => {
-//     if (err) {
-//       console.error("Error reading search terms", err);
-//       return;
-//     }
+    const personCallback = (err, data, i) => {
+      if (firstErr) {
+        // ignore after first error
+        return;
+      }
+      if (err) {
+        firstErr = err;
+        console.error("Error getting person", err);
+        return;
+      }
 
-//     let numOk = 0;
-//     let firstErr;
-//     const people = Array(terms.length);
+      people[i] = data;
+      numOk++;
 
-//     const personCallback = (err, data, i) => {
-//       if (firstErr) {
-//         // ignore after first error
-//         return;
-//       }
-//       if (err) {
-//         firstErr = err;
-//         console.error("Error getting person", err);
-//         return;
-//       }
+      if (numOk === terms.length) {
+        saveNames(people, err => {
+          if (err) {
+            console.error("Error saving names", err);
+            return;
+          }
+          console.log("Done");
+        });
+      }
+    };
 
-//       people[i] = data;
-//       numOk++;
+    terms.forEach((term, i) => {
+      getPerson(term, (err, data) => {
+        personCallback(err, data, i);
+      });
+    });
+  });
+  console.log("Searching for character names matching search terms");
+}
 
-//       if (numOk === terms.length) {
-//         saveNames(people, err => {
-//           if (err) {
-//             console.error("Error saving names", err);
-//             return;
-//           }
-//           console.log("Done");
-//         });
-//       }
-//     };
-
-//     terms.forEach((term, i) => {
-//       getPerson(term, (err, data) => {
-//         personCallback(err, data, i);
-//       });
-//     });
-//   });
-//   console.log("Searching for character names matching search terms");
-// }
-
-// main();
+main();
 
