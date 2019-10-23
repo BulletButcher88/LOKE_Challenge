@@ -5,20 +5,25 @@ const { resolve } = require("url");
 
 const SWAPI_URL = "https://swapi.co/api/";
 
+// I'm lost on the callbacks. errors when restructing functions into async, try/catch. 
+
  async function apiGet(path) {
    try {
-        await https.get(resolve(SWAPI_URL, path), {headers: {Accept: "application/json"}},       
-        res => {
-        let data = "";
-
-        res.on("data", chunk => {
-        data += chunk;
-      });
-
-        res.on("end", () => {
-        cb(null, data ? JSON.parse(data) : null);
+        https.get(resolve(SWAPI_URL, path), {headers: {Accept: "application/json"}}       
+        
+        .then(
+          (res) => {
+          let data = "";
+  
+          res.on("data", chunk => {
+          data += chunk;
         });
-      }
+
+          res.on("end", () => {
+          cb(null, data ? JSON.parse(data) : null);
+          });
+        }
+       )
     )
    } catch(error) {
      console.log(error)

@@ -9,11 +9,11 @@
 // }
 
 
+// _________________________________ ANSWER_________________________________
 
-// COMMENT: Two possible approaches of writing a fibonacci function may be an iterative solution and reclusive solution.  Despite the iterative function having more lines of code, it is quicker to call as a sequence Big O = O(n), where as the recursive solution Big O = O(n^2).
+// COMMENT: I found two approaches for a fibonacci function, an iterative solution and a reclusive solution. Despite the iterative function having more lines of code, it is quicker to call as a sequence Big O = O(n), where as the recursive solution Big O = O(n^2).
 
-
-// 1 ANSWER: iterative function
+// 1st solution: iterative 
 
 function fibonacci(n) {
   let arr = [0 , 1]
@@ -25,13 +25,13 @@ function fibonacci(n) {
   return arr[n]
 }
 
-for (let i = 0; i < 10; i++) {
- console.log(i, fibonacci(i));
+for (let i = 1; i < 10; i++) {
+  console.log("index " + i, "=  " + fibonacci(i))
 }
 
 
 
-// 2 ANSWER: recursive solution
+// 2nd solution: recursive 
 
 // function fibonacci(n) {
 //   if (n < 2) {
@@ -40,6 +40,6 @@ for (let i = 0; i < 10; i++) {
 //   return fibonacci(n - 1) + fibonacci(n - 2)
 // }
 
-// for (let i = 0; i < 10; i++) {
-//   console.log(i, fibonacci(i));
+// for (let i = 1; i < 10; i++) {
+//   console.log("index " + i, "=  " + fibonacci(i))
 // }
