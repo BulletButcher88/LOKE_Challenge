@@ -20,7 +20,6 @@ const SWAPI_URL = "https://swapi.co/api/";
         });
       }
     )
-
    } catch(error) {
      console.log(error)
    }
@@ -40,11 +39,10 @@ async function getPerson(query, cb) {
 
 
 async function readSearchTerms() {
-
   try {
     const data = await readFile(join(__dirname, "search.txt"), { encoding: "utf8" });
     const nonEmptyLines = await data.split("\n").filter(line => Boolean(line));
-   // cb(null, nonEmptyLines)
+   cb(null, nonEmptyLines)
     console.log(nonEmptyLines)
   } catch (error) {
     console.log(error) 

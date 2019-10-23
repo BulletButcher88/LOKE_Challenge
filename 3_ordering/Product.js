@@ -1,34 +1,33 @@
 const mongoose = require("mongoose");
 
-// Speical items Schema 
+// Coffee Speical is a second Schema imported. 
 const coffeeSpeicals = require("./CoffeeSpeicals");
 
 
 const productSchema = new mongoose.Schema({
-  // Time stamp
-  createdTime: { type: Date, default: Date.now },
 
-  // Product details
-  productId: String,
-  productName: String,
-  description: String,
-  numberOfCups: String,
+  createdTime: { type: Date, default: Date.now }, // Time stamp
 
-  withDariyMilk: Boolean,
-  withSkimMilk: Boolean,
-  withAlmondMilk: Boolean,  
+  productId: String, // id stamp
+  productName: String, // products name, in this case Coffee
+  description: String, // description of the product
+  numberOfCups: String, // number of items to the order
 
-  cupSize: String,
-  numberSugar: String,
+  withDariyMilk: Boolean, // dariry milk option
+  withSkimMilk: Boolean, // skin milk option
+  withAlmondMilk: Boolean, // almond milk option
 
-  coffeeSpeicals: [coffeeSpeicals],
-  cost: Number,
+  cupSize: String, // cup size 
+  numberSugar: String, // added sugar/s
 
- // Inventory, shopping cart and record keeping
-  imageUrls: [String],
-  storeTrade: String,
-  sold: Boolean,
-  inProgress: Boolean,
+  coffeeSpeicals: [coffeeSpeicals], //CoffeeSpeical scehema for extra items 
+
+  cost: Number, // total order cost
+
+  imageUrls: [String], // optional for image url
+  storeTrade: String, // to track point of sale
+  sold: Boolean, // confirmation of the payment
+  delivered: Boolean, // after sale has completed, payment processed customer has received their order
 });
 
 module.exports = mongoose.model("Product", productSchema);

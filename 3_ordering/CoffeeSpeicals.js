@@ -1,16 +1,16 @@
 const mongoose = require("mongoose");
 
-// Schema for Speical Iteams 
+// Schema for Speical Iteams
 
 const coffeeSpeicals = new mongoose.Schema({
-  itemId: String, //date to conduct survey of the job
-  itemName: String, // the person who is following up this time
-  itemDescription: String,
-  itemPrice: Number,
 
-  // Inventory and record keeping
-  numberOfItems: String,
-  outOfStock: Boolean,
+  itemId: String, // id of speical item
+  itemName: String, // the items name
+  itemDescription: String,  // speical item description
+  itemPrice: Number, // item price
+
+  numberOfItems: String, // number of inventories
+  outOfStock: Boolean,  // once inventories is low
 });
 
 module.exports = coffeeSpeicals;
