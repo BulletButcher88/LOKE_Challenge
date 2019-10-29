@@ -1,14 +1,11 @@
 import React from 'react';
-import { shallow } from 'enzyme';
 
-import FizzBuzz from '../component/fizzbuzz.component';
+import { fizzLogic } from '../component/fizzbuzz.component';
 
-describe('<FizzBuzz />', () => {
-	it('renders without crashing', () => {
-		shallow(<FizzBuzz />);
-	});
-});
 
+test('fizzLogic function', () => {
+	expect(fizzLogic).toHaveBeenCalled()
+})
 
 
 // fake testing runs without errors
